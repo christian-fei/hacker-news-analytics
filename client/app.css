@@ -1,0 +1,16 @@
+/* * { transition: all 0.3s ease; } */
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+table th, table td {
+  padding-top: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+table pre {
+  height: 10em;
+  overflow: scroll;
+}
