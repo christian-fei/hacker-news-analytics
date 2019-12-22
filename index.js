@@ -30,7 +30,7 @@ async function main () {
   }, 10000)
 
   async function processJob (job, done) {
-    console.log(job.id, job.data)
+    console.log('processing', job.id, job.data)
     job.progress(10)
     let page = await browser.newPage(job.data.url, { reusePage: false })
     await new Promise((resolve) => setTimeout(resolve, 1000))
