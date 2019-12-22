@@ -5,7 +5,8 @@ export default class App extends Component {
   constructor () {
     super()
     this.state = {
-      data: {}
+      data: {},
+      isStats: /\/stats/.test(window.location.pathname)
     }
     const eventSource = new window.EventSource('/sse' + window.location.pathname)
 
@@ -14,7 +15,7 @@ export default class App extends Component {
       message = safeJSONparse(message.data, {})
       const data = message.data || {}
       console.log('data', data)
-      this.setState({ data })
+      this.setState({ data, isStats: /\/stats/.test(window.location.pathname) })
     }
   }
 
@@ -29,8 +30,27 @@ export default class App extends Component {
       return h('div', null, 'loading...')
     }
 
-    if (/\/stats/.test(window.location.pathname)) {
-      return h('div', null, 'stats ' + window.location.pathname.replace(/\/stats\//, ''))
+    if (this.state.isStats) {
+      return h('div', null, [
+        h('div', null, [
+          h('table', null, [
+            h('tr', null, [
+              h('th', null, 'rank'),
+              h('th', null, 'score'),
+              h('th', null, 'age'),
+              h('th', null, 'comments'),
+              h('th', null, 'title')
+            ]),
+            data.map(item => h('tr', { id: item.id, onClick: (e) => { if (!this.state.isStats) window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
+              h('td', null, '#' + item.rank),
+              h('td', null, `${item.score} upvotes`),
+              h('td', null, item.age),
+              h('td', null, `${item.commentCount} comments`),
+              h('td', null, h('a', { href: item.link, target: '_blank' }, item.title))
+            ]))
+          ])
+        ])
+      ])
     }
 
     return h('div', null, [

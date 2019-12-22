@@ -4,6 +4,7 @@ const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { create
 const path = require('path')
 const monk = require('monk')
 const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
+const itemsColl = db.get('items')
 const fs = require('fs')
 const fsp = require('fs').promises
 const connect = require('connect')
@@ -16,7 +17,6 @@ async function main () {
   const queue = createQueue('hackernews')
   const server = await createServer({ port: +process.env.PORT || +process.env.HTTP_PORT || 5000 })
 
-  const itemsColl = db.get('items')
   console.log('creating index')
   await itemsColl.createIndex({
     id: 1,
@@ -174,11 +174,21 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         'Cache-Control': 'no-cache'
       })
 
-      const handle = setInterval(() => {
+      const handle = setInterval(async () => {
+        console.log('handle', req.url)
+        if (/\/stats\//gi.test(req.url)) {
+          res.write('event: message\n')
+          const id = req.url.replace(/\/stats\//gi, '')
+          const data = await itemsColl.find({ id }, { limit: 60 * 24, sort: { updated: -1 } })
+          res.write('event: message\n')
+          res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
+          return res.write('\n\n')
+        }
+
         res.write('event: message\n')
         res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
         res.write('\n\n')
-      }, 1000)
+      }, 5000)
 
       return res.on('close', () => {
         clearInterval(handle)
@@ -186,30 +196,9 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         console.log('sse connection closed')
       })
     })
-    app.use('/sse/stats', (req, res) => {
-      console.log('see headers', Object.keys(req.params.headers))
-      console.log('sse', req.url)
-      return res.end()
-      // res.writeHead(200, {
-      //   Connection: 'keep-alive',
-      //   'Content-Type': 'text/event-stream',
-      //   'Cache-Control': 'no-cache'
-      // })
-
-      // const handle = setInterval(() => {
-      //   res.write('event: message\n')
-      //   res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
-      //   res.write('\n\n')
-      // }, 1000)
-
-      // return res.on('close', () => {
-      //   clearInterval(handle)
-      //   try { res.end() } catch (_) {}
-      //   console.log('sse connection closed')
-      // })
-    })
 
     app.use((req, res) => {
+      console.log('middleware', req.url)
       let filename = 'index.html'
       let contentType = 'text/html'
 
