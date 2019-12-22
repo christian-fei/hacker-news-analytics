@@ -165,10 +165,6 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
     app.use('/favicon.ico', (req, res) => {
       return res.end()
     })
-    app.use('/stats/:id', (req, res) => {
-      console.log('id stats', req.params.id)
-      return res.end()
-    })
 
     app.use('/sse', (req, res) => {
       console.log('sse', req.url)
@@ -190,10 +186,38 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         console.log('sse connection closed')
       })
     })
+    app.use('/sse/stats', (req, res) => {
+      console.log('see headers', Object.keys(req.params.headers))
+      console.log('sse', req.url)
+      return res.end()
+      // res.writeHead(200, {
+      //   Connection: 'keep-alive',
+      //   'Content-Type': 'text/event-stream',
+      //   'Cache-Control': 'no-cache'
+      // })
+
+      // const handle = setInterval(() => {
+      //   res.write('event: message\n')
+      //   res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
+      //   res.write('\n\n')
+      // }, 1000)
+
+      // return res.on('close', () => {
+      //   clearInterval(handle)
+      //   try { res.end() } catch (_) {}
+      //   console.log('sse connection closed')
+      // })
+    })
 
     app.use((req, res) => {
       let filename = 'index.html'
       let contentType = 'text/html'
+
+      if (/\/stats/.test(req.url)) {
+        res.setHeader('Content-Type', contentType)
+        res.write(read(path.join(__dirname, 'client', filename)) || index())
+        return res.end()
+      }
 
       if (req.url !== '/') {
         // console.log('unhandled', req.url)

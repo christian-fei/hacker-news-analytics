@@ -7,7 +7,7 @@ export default class App extends Component {
     this.state = {
       data: {}
     }
-    const eventSource = new window.EventSource('/sse')
+    const eventSource = new window.EventSource('/sse' + window.location.pathname)
 
     eventSource.onmessage = (message) => {
       if (!message || !message.data) return console.error('skipping empty message')
@@ -28,6 +28,11 @@ export default class App extends Component {
     if (!data || Object.keys(data).length === 0) {
       return h('div', null, 'loading...')
     }
+
+    if (/\/stats/.test(window.location.pathname)) {
+      return h('div', null, 'stats ' + window.location.pathname.replace(/\/stats\//, ''))
+    }
+
     return h('div', null, [
       pages.map(p => {
         return h('div', null, [
@@ -40,7 +45,7 @@ export default class App extends Component {
               h('th', null, 'comments'),
               h('th', null, 'title')
             ]),
-            data[p].map(item => h('tr', null, [
+            data[p].map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
               h('td', null, '#' + item.rank),
               h('td', null, `${item.score} upvotes`),
               h('td', null, item.age),
