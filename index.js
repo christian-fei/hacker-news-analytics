@@ -4,13 +4,17 @@ const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { create
 const path = require('path')
 const monk = require('monk')
 const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
-const fs = require('fs').promises
+const fs = require('fs')
+const fsp = require('fs').promises
+const connect = require('connect')
+const http = require('http')
 
 main()
 
 async function main () {
   const browser = await createBrowser({ headless: true, incognito: true })
   const queue = createQueue('hackernews')
+  const server = await createServer({ port: +process.env.PORT || +process.env.HTTP_PORT || 5000 })
 
   const itemsColl = db.get('items')
   console.log('creating index')
@@ -78,9 +82,10 @@ async function main () {
     // console.log({ titles, links, scores, ages, commentCounts })
     await page.close()
     console.log('success', job.id, job.data.url)
+    const pageNumber = +job.data.url.replace(/\D/gi, '')
     const items = titles.map((_, i) => ({
       title: titles[i],
-      page: +links[i].replace(/\D/gi, ''),
+      page: pageNumber,
       link: links[i],
       score: scores[i],
       age: ages[i],
@@ -88,11 +93,15 @@ async function main () {
       updated: new Date().toISOString()
     }))
     // console.log(JSON.stringify(items))
-    await fs.mkdir(path.resolve(__dirname, 'data'), { recursive: true })
-    await fs.mkdir(path.resolve(__dirname, 'data', job.data.url, '..'), { recursive: true })
-    await fs.writeFile(path.resolve(__dirname, 'data', `${job.data.url}.json`), JSON.stringify(items, null, 2))
+    await fsp.mkdir(path.resolve(__dirname, 'data'), { recursive: true })
+    await fsp.mkdir(path.resolve(__dirname, 'data', job.data.url, '..'), { recursive: true })
+    await fsp.writeFile(path.resolve(__dirname, 'data', `${job.data.url}.json`), JSON.stringify(items, null, 2))
 
     await job.progress(100)
+
+    server.update(data => {
+      data[pageNumber] = items
+    })
 
     for (const item of items) {
       await itemsColl.insert(item)
@@ -119,4 +128,85 @@ async function main () {
     await queue.add({ url: 'https://news.ycombinator.com/news?p=9' }, { attempts: 3 })
     await queue.add({ url: 'https://news.ycombinator.com/news?p=10' }, { attempts: 3 })
   }
+}
+
+async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT || 4000 } = {}) {
+  const data = {}
+  const app = connect()
+  withRouter(app)
+  const httpServer = http.createServer(app)
+  httpServer.listen(port)
+
+  console.log(`listening on http://localhost:${port}`)
+  return {
+    update: (cb = Function.prototype) => { cb(data) },
+    address: async () => {
+      const address = httpServer.address()
+      if (address) return `http://localhost:${address.port}`
+      return new Promise((resolve) => {
+        const handle = setInterval(() => {
+          const address = httpServer.address()
+          if (!address) return
+          clearInterval(handle)
+          resolve(`http://localhost:${address.port}`)
+        }, 200)
+      })
+    }
+  }
+
+  function withRouter (app) {
+    console.log('with router')
+    app.use('/favicon.ico', (req, res) => {
+      return res.end()
+    })
+
+    app.use('/sse', (req, res) => {
+      console.log('sse', req.url)
+      res.writeHead(200, {
+        Connection: 'keep-alive',
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache'
+      })
+
+      const handle = setInterval(() => {
+        res.write('event: message\n')
+        res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
+        res.write('\n\n')
+      }, 1000)
+
+      return res.on('close', () => {
+        clearInterval(handle)
+        try { res.end() } catch (_) {}
+        console.log('sse connection closed')
+      })
+    })
+
+    app.use((req, res) => {
+      let filename = 'index.html'
+      let contentType = 'text/html'
+
+      if (req.url !== '/') {
+        // console.log('unhandled', req.url)
+        filename = req.url.replace(/^\//, '')
+        contentType = filename.includes('css') ? 'text/css' : 'text/javascript'
+      }
+      // console.log('guessed', filename, contentType, 'for', req.url)
+      res.setHeader('Content-Type', contentType)
+      res.write(read(path.join(__dirname, 'client', filename)) || index())
+      return res.end()
+    })
+  }
+}
+
+function read (filepath, defaultValue = '') {
+  try {
+    return fs.readFileSync(filepath)
+  } catch (err) {
+    return defaultValue
+  }
+}
+
+function index () {
+  const filepath = path.join(__dirname, 'client', 'index.html')
+  return read(filepath)
 }
