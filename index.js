@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { createQueue }, createServer } = require('mega-scraper')
+const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { createQueue } } = require('mega-scraper')
 const path = require('path')
 const fs = require('fs').promises
 
@@ -14,10 +14,20 @@ async function main () {
     await run()
   }, 1000 * 60)
   queue.on('stalled', async (job) => {
-    console.log('discard stalled job', job)
+    console.log('discard stalled job', job.id, job.data)
     await job.discard()
   })
-  queue.process(4, async (job, done) => {
+  queue.process(4, processJob)
+
+  setInterval(async () => {
+    const failed = await queue.getFailed()
+    for (const job of failed) {
+      console.log('retrying', job.id)
+      await job.retry()
+    }
+  }, 10000)
+
+  async function processJob (job, done) {
     console.log(job.id, job.data)
     job.progress(10)
     let page = await browser.newPage(job.data.url, { reusePage: false })
@@ -67,15 +77,7 @@ async function main () {
 
     await job.progress(100)
     done(null, items)
-  })
-
-  setInterval(async () => {
-    const failed = await queue.getFailed()
-    for (const job of failed) {
-      console.log('retrying', job.id)
-      await job.retry()
-    }
-  }, 10000)
+  }
 
   async function run () {
     await queue.add({ url: 'https://news.ycombinator.com/news?p=1' }, { attempts: 3 })
