@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/christian-fei/hackernews-analytics#readme",
   "dependencies": {
-    "mega-scraper": "^11.11.0"
+    "mega-scraper": "^11.11.0",
+    "monk": "^7.1.1"
   }
 }

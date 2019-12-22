@@ -11,6 +11,7 @@ async function main () {
   const queue = createQueue('hackernews')
   await run()
   setInterval(async () => {
+    console.log('running')
     await run()
   }, 1000 * 60)
   queue.on('stalled', async (job) => {
