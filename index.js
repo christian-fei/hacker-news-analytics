@@ -19,6 +19,7 @@ async function main () {
   const itemsColl = db.get('items')
   console.log('creating index')
   await itemsColl.createIndex({
+    id: 1,
     title: 1,
     page: 1,
     rank: 1,
@@ -75,6 +76,7 @@ async function main () {
     await takeScreenshot(page, job.data)
     await job.progress(90)
     // const titles = await page.$$eval('.storylink', el => el && el.innerText)
+    const ids = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.getAttribute('id')))
     const titles = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.innerText))
     const links = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.href))
     const scores = await page.evaluate(() => [...document.querySelectorAll('.score')].map(el => +el.innerText.replace(/\D/gi, '')))
@@ -86,6 +88,7 @@ async function main () {
     console.log('success', job.id, job.data.url)
     const pageNumber = +job.data.url.replace(/\D/gi, '')
     const items = titles.map((_, i) => ({
+      id: ids[i],
       title: titles[i],
       page: pageNumber,
       rank: ranks[i],
@@ -160,6 +163,10 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
   function withRouter (app) {
     console.log('with router')
     app.use('/favicon.ico', (req, res) => {
+      return res.end()
+    })
+    app.use('/stats/:id', (req, res) => {
+      console.log('id stats', req.params.id)
       return res.end()
     })
 
