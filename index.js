@@ -13,6 +13,7 @@ async function main () {
   const queue = createQueue('hackernews')
 
   const itemsColl = db.get('items')
+  console.log('creating index')
   await itemsColl.createIndex({
     title: 1,
     link: 1,
