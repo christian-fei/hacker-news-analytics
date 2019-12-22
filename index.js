@@ -1,24 +1,27 @@
 #!/usr/bin/env node
 
 const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { createQueue }, createServer } = require('mega-scraper')
+const path = require('path')
+const fs = require('fs').promises
 
 main()
 
 async function main () {
-  const browser = await createBrowser({ headless: true, incognito: false })
+  const browser = await createBrowser({ headless: true, incognito: true })
   const queue = createQueue('hackernews')
   await run()
   setInterval(async () => {
     await run()
-  }, 1000 * 60 * 1)
+  }, 1000 * 60)
   queue.on('stalled', async (job) => {
     console.log('discard stalled job', job)
     await job.discard()
   })
-  queue.process(5, async (job, done) => {
+  queue.process(4, async (job, done) => {
     console.log(job.id, job.data)
     job.progress(10)
     let page = await browser.newPage(job.data.url, { reusePage: false })
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     job.progress(20)
     page = await preparePage(page, { proxy: true, blocker: true, images: true, stylesheets: true, javascript: true })
     job.progress(30)
@@ -39,10 +42,31 @@ async function main () {
 
     job.progress(80)
     await takeScreenshot(page, job.data)
+    await job.progress(90)
+    // const titles = await page.$$eval('.storylink', el => el && el.innerText)
+    const titles = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.innerText))
+    const links = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.href))
+    const scores = await page.evaluate(() => [...document.querySelectorAll('.score')].map(el => +el.innerText.replace(/\D/gi, '')))
+    const ages = await page.evaluate(() => [...document.querySelectorAll('.age a')].map(el => el.innerText))
+    const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
+    // console.log({ titles, links, scores, ages, commentCounts })
     await page.close()
-    console.log('success', job.data)
+    console.log('success', job.id, job.data.url)
+    const items = titles.map((_, i) => ({
+      title: titles[i],
+      link: links[i],
+      score: scores[i],
+      age: ages[i],
+      commentCount: commentCounts[i],
+      updated: new Date().toISOString()
+    }))
+    // console.log(JSON.stringify(items))
+    await fs.mkdir(path.resolve(__dirname, 'data'), { recursive: true })
+    await fs.mkdir(path.resolve(__dirname, 'data', job.data.url, '..'), { recursive: true })
+    await fs.writeFile(path.resolve(__dirname, 'data', `${job.data.url}.json`), JSON.stringify(items, null, 2))
+
     await job.progress(100)
-    done()
+    done(null, items)
   })
 
   setInterval(async () => {
