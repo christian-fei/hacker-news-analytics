@@ -16,6 +16,7 @@ async function main () {
   console.log('creating index')
   await itemsColl.createIndex({
     title: 1,
+    page: 1,
     link: 1,
     score: 1,
     age: 1,
@@ -79,6 +80,7 @@ async function main () {
     console.log('success', job.id, job.data.url)
     const items = titles.map((_, i) => ({
       title: titles[i],
+      page: +links[i].replace(/\D/gi, ''),
       link: links[i],
       score: scores[i],
       age: ages[i],
