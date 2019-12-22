@@ -2,6 +2,8 @@
 
 const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { createQueue } } = require('mega-scraper')
 const path = require('path')
+const monk = require('monk')
+const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
 const fs = require('fs').promises
 
 main()
@@ -9,6 +11,16 @@ main()
 async function main () {
   const browser = await createBrowser({ headless: true, incognito: true })
   const queue = createQueue('hackernews')
+
+  const itemsColl = db.get('items')
+  await itemsColl.createIndex({
+    title: 1,
+    link: 1,
+    score: 1,
+    age: 1,
+    commentCount: 1
+  }, { unique: true })
+
   await run()
   setInterval(async () => {
     console.log('running')
@@ -78,6 +90,15 @@ async function main () {
     await fs.writeFile(path.resolve(__dirname, 'data', `${job.data.url}.json`), JSON.stringify(items, null, 2))
 
     await job.progress(100)
+
+    for (const item of items) {
+      try {
+        await itemsColl.insert(item)
+        console.log('inserted', item.title, item.url)
+      } catch (err) {
+        console.log('unchanged', item.title, item.url)
+      }
+    }
     done(null, items)
   }
 

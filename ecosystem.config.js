@@ -8,10 +8,12 @@ module.exports = {
     watch: false,
     max_memory_restart: '500M',
     env: {
-      NODE_ENV: 'development'
+      NODE_ENV: 'development',
+      MONGO_URI: 'mongodb://localhost:27017'
     },
     env_production: {
-      NODE_ENV: 'production'
+      NODE_ENV: 'production',
+      MONGO_URI: 'mongodb://localhost:27017'
     }
   }],
 
