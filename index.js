@@ -21,6 +21,7 @@ async function main () {
   await itemsColl.createIndex({
     title: 1,
     page: 1,
+    rank: 1,
     link: 1,
     score: 1,
     age: 1,
@@ -78,6 +79,7 @@ async function main () {
     const links = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.href))
     const scores = await page.evaluate(() => [...document.querySelectorAll('.score')].map(el => +el.innerText.replace(/\D/gi, '')))
     const ages = await page.evaluate(() => [...document.querySelectorAll('.age a')].map(el => el.innerText))
+    const ranks = await page.evaluate(() => [...document.querySelectorAll('.athing .rank')].map(el => +(el.innerText.replace(/\D/gi, ''))))
     const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
     // console.log({ titles, links, scores, ages, commentCounts })
     await page.close()
@@ -86,6 +88,7 @@ async function main () {
     const items = titles.map((_, i) => ({
       title: titles[i],
       page: pageNumber,
+      rank: ranks[i],
       link: links[i],
       score: scores[i],
       age: ages[i],
