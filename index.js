@@ -95,12 +95,14 @@ async function main () {
     await job.progress(100)
 
     for (const item of items) {
-      try {
-        await itemsColl.insert(item)
-        console.log('inserted', item.title, item.url)
-      } catch (err) {
-        console.log('unchanged', item.title, item.url)
-      }
+      await itemsColl.insert(item)
+        .then(() => {
+          console.log('inserted', item.title, item.url)
+        })
+        .catch((err) => {
+          if (err) { console.error(err.message) }
+          console.log('unchanged', item.title, item.url)
+        })
     }
     done(null, items)
   }
