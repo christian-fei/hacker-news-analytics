@@ -31,24 +31,32 @@ export default class App extends Component {
     }
 
     if (this.state.isStats) {
-      const chartHeight = 100
+      const enoughDataForCharts = data.length > 3
+      const chartSection = []
 
-      const scores = data.map(d => d.score).reverse()
-      const maxScore = Math.max(...scores)
-      const minScore = Math.min(...scores)
-      const normalizedScores = scores.map(score => ((score - minScore) / (maxScore - minScore)) * chartHeight)
-      const comments = data.map(d => d.commentCount).reverse()
-      const maxComments = Math.max(...comments)
-      const minComments = Math.min(...comments)
-      const normalizedComments = comments.map(comment => ((comment - minComments) / (maxComments - minComments)) * chartHeight)
-      return h('div', null, [
-        h('div', null, [
+      if (enoughDataForCharts) {
+        const chartHeight = 100
+        const scores = data.map(d => d.score).reverse()
+        const maxScore = Math.max(...scores)
+        const minScore = Math.min(...scores)
+        const normalizedScores = scores.map(score => ((score - minScore) / (maxScore - minScore)) * chartHeight)
+        const comments = data.map(d => d.commentCount).reverse()
+        const maxComments = Math.max(...comments)
+        const minComments = Math.min(...comments)
+        const normalizedComments = comments.map(comment => ((comment - minComments) / (maxComments - minComments)) * chartHeight)
+        chartSection.push(...[
           h('h4', null, 'score over time'),
           h('br', null, []),
           h('svg', { width: '600px', height: `${chartHeight}px` }, normalizedScores.map((n, i) => h('rect', { width: `${100 / normalizedScores.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${600 / normalizedScores.length * i}, 0)` }))),
           h('h4', null, 'comments over time'),
           h('br', null, []),
-          h('svg', { width: '600px', height: `${chartHeight}px` }, normalizedComments.map((n, i) => h('rect', { width: `${100 / normalizedComments.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${600 / normalizedComments.length * i}, 0)` }))),
+          h('svg', { width: '600px', height: `${chartHeight}px` }, normalizedComments.map((n, i) => h('rect', { width: `${100 / normalizedComments.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${600 / normalizedComments.length * i}, 0)` })))
+        ])
+      }
+
+      return h('div', null, [
+        h('div', null, [
+          ...chartSection,
           h('h4', null, 'changes over time'),
           h('br', null, []),
           h('table', null, [
