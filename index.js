@@ -174,8 +174,10 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         'Cache-Control': 'no-cache'
       })
 
-      const handle = setInterval(async () => {
-        console.log('handle', req.url)
+      writeSSE()
+      const handle = setInterval(writeSSE, 1000)
+
+      async function writeSSE () {
         if (/\/stats\//gi.test(req.url)) {
           res.write('event: message\n')
           const id = req.url.replace(/\/stats\//gi, '')
@@ -188,7 +190,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         res.write('event: message\n')
         res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
         res.write('\n\n')
-      }, 1000)
+      }
 
       return res.on('close', () => {
         clearInterval(handle)
