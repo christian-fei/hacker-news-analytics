@@ -82,7 +82,7 @@ async function main () {
     const scores = await page.evaluate(() => [...document.querySelectorAll('.score')].map(el => +el.innerText.replace(/\D/gi, '')))
     const ages = await page.evaluate(() => [...document.querySelectorAll('.age a')].map(el => el.innerText))
     const ranks = await page.evaluate(() => [...document.querySelectorAll('.athing .rank')].map(el => +(el.innerText.replace(/\D/gi, ''))))
-    const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
+    const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr a:nth-child(7)')].map(el => +(el.innerText.replace(/\D/gi, ''))))
     // console.log({ titles, links, scores, ages, commentCounts })
     await page.close()
     console.log('success', job.id, job.data.url)
