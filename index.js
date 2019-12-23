@@ -188,7 +188,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         res.write('event: message\n')
         res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
         res.write('\n\n')
-      }, 5000)
+      }, 1000)
 
       return res.on('close', () => {
         clearInterval(handle)
