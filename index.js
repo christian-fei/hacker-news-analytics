@@ -73,7 +73,7 @@ async function main () {
     }
 
     job.progress(80)
-    await takeScreenshot(page, job.data)
+    // await takeScreenshot(page, job.data)
     await job.progress(90)
     // const titles = await page.$$eval('.storylink', el => el && el.innerText)
     const ids = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.getAttribute('id')))
