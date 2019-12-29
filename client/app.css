@@ -12,3 +12,7 @@ table pre {
   height: 10em;
   overflow: scroll;
 }
+
+table {
+  text-align: right;
+}
