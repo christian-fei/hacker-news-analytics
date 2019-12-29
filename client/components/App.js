@@ -61,20 +61,20 @@ export default class App extends Component {
           h('br', null, []),
           h('table', null, [
             h('tr', null, [
+              h('th', null, 'updated'),
               h('th', null, 'rank'),
               // h('th', null, 'age'),
               h('th', null, 'score'),
               h('th', null, 'comments'),
-              h('th', null, 'title'),
-              h('th', null, 'updated')
+              h('th', null, 'title')
             ]),
             data.map(item => h('tr', { id: item.id, onClick: (e) => { if (!this.state.isStats) window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
+              h('td', null, item.updated),
               h('td', null, '#' + item.rank),
               // h('td', null, item.age),
               h('td', null, `${item.score}`),
               h('td', null, `${item.commentCount}`),
-              h('td', null, h('a', { href: item.link, target: '_blank' }, item.title)),
-              h('td', null, item.updated)
+              h('td', null, h('a', { href: item.link, target: '_blank' }, item.title))
             ]))
           ])
         ])
@@ -87,6 +87,7 @@ export default class App extends Component {
           h('h1', null, `page ${p}`),
           h('table', null, [
             h('tr', null, [
+              h('th', null, 'updated'),
               h('th', null, 'rank'),
               // h('th', null, 'age'),
               h('th', null, 'score'),
@@ -94,6 +95,7 @@ export default class App extends Component {
               h('th', null, 'title')
             ]),
             data[p].map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
+              h('td', null, item.updated),
               h('td', null, '#' + item.rank),
               // h('td', null, item.age),
               h('td', null, `${item.score}`),
