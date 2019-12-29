@@ -61,7 +61,7 @@ export default class App extends Component {
           h('br', null, []),
           h('table', null, [
             h('tr', null, [
-              h('th', null, 'updated'),
+              h('th', { class: 'updated' }, 'updated'),
               h('th', null, 'rank'),
               // h('th', null, 'age'),
               h('th', null, 'score'),
@@ -87,7 +87,7 @@ export default class App extends Component {
           h('h1', null, `page ${p}`),
           h('table', null, [
             h('tr', null, [
-              h('th', null, 'updated'),
+              h('th', { class: 'updated' }, 'updated'),
               h('th', null, 'rank'),
               // h('th', null, 'age'),
               h('th', null, 'score'),

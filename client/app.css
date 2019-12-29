@@ -16,3 +16,7 @@ table pre {
 table {
   text-align: right;
 }
+
+tr.updated {
+  width: 275px;
+}
