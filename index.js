@@ -175,7 +175,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       })
 
       writeSSE()
-      const handle = setInterval(writeSSE, 1000)
+      const handle = setInterval(writeSSE, 5000)
 
       async function writeSSE () {
         if (/\/stats\//gi.test(req.url)) {
