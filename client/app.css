@@ -17,6 +17,6 @@ table {
   text-align: right;
 }
 
-tr.updated {
+th.updated {
   width: 275px;
 }
