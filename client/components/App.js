@@ -101,8 +101,8 @@ export default class App extends Component {
             )
           ])
         ])
-      }),
-      h('pre', null, safeJSONstringify(data))
+      })
+      // h('pre', null, safeJSONstringify(data))
     ])
   }
 }
