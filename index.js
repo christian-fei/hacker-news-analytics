@@ -180,9 +180,13 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       async function writeSSE () {
         if (/\/stats\//gi.test(req.url)) {
           res.write('event: message\n')
-          const id = req.url.replace(/\/stats\//gi, '')
-          console.log('finding items', { id })
-          const data = await itemsColl.find({ id }, { sort: { updated: -1 } })
+          // const id = req.url.replace(/\/stats\//gi, '')
+          // console.log('finding items', { id })
+          // const data = await itemsColl.find({ id }, { sort: { updated: -1 } })
+          let title = req.url.replace(/\/stats\//gi, '')
+          title = decodeURIComponent(title)
+          console.log('finding items', { title })
+          const data = await itemsColl.find({ title }, { sort: { updated: -1 } })
           res.write('event: message\n')
           res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
           return res.write('\n\n')

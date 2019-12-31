@@ -94,7 +94,7 @@ export default class App extends Component {
             h('th', null, 'title'),
             h('th', { class: 'updated' }, 'updated')
           ]),
-          all.map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
+          all.map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${encodeURIComponent(item.title)}`) } }, [
             h('td', null, '#' + item.rank),
             h('td', null, `${item.score}`),
             h('td', null, `${item.commentCount}`),
