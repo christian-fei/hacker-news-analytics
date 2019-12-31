@@ -19,13 +19,10 @@ export default class App extends Component {
     }
   }
 
-  componentDidUpdate () {
-    // this.messagesEl.scrollTop = this.messagesEl.scrollHeight + 400
-  }
-
   render () {
     const data = this.state.data
-    const pages = Object.keys(data).sort((a, b) => +a > +b)
+    const all = Object.keys(data).reduce((acc, key) => acc.concat(data[key]), [])
+
     if (!data || Object.keys(data).length === 0) {
       return h('div', null, 'loading...')
     }
@@ -45,17 +42,24 @@ export default class App extends Component {
         const minComments = Math.min(...comments)
         const normalizedComments = comments.map(comment => ((comment - minComments) / (maxComments - minComments)) * chartHeight)
         chartSection.push(...[
-          h('h4', null, 'score over time'),
-          h('br', null, []),
-          h('svg', { width: '600px', height: `${chartHeight}px` }, normalizedScores.map((n, i) => h('rect', { width: `${100 / normalizedScores.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${600 / normalizedScores.length * i}, 0)` }))),
-          h('h4', null, 'comments over time'),
-          h('br', null, []),
-          h('svg', { width: '600px', height: `${chartHeight}px` }, normalizedComments.map((n, i) => h('rect', { width: `${100 / normalizedComments.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${600 / normalizedComments.length * i}, 0)` })))
+          h('div', null, [
+            h('div', { style: 'display: inline-block;width: 50%;' }, [
+              h('h4', null, 'score over time'),
+              h('br', null, []),
+              h('svg', { width: '300px', height: `${chartHeight}px` }, normalizedScores.map((n, i) => h('rect', { width: `${100 / normalizedScores.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${300 / normalizedScores.length * i}, 0)` })))
+            ]),
+            h('div', { style: 'display: inline-block;width: 50%;' }, [
+              h('h4', null, 'comments over time'),
+              h('br', null, []),
+              h('svg', { width: '600px', height: `${chartHeight}px` }, normalizedComments.map((n, i) => h('rect', { width: `${100 / normalizedComments.length}%`, x: 0, y: chartHeight - n, height: n, transform: `translate(${300 / normalizedComments.length * i}, 0)` })))
+            ])
+          ])
         ])
       }
 
       return h('div', null, [
         h('div', null, [
+          h('h1', null, [h('a', { href: '/' }, 'hacker news analytics')]),
           ...chartSection,
           h('h4', null, 'changes over time'),
           h('br', null, []),
@@ -80,29 +84,26 @@ export default class App extends Component {
     }
 
     return h('div', null, [
-      pages.map(p => {
-        return h('div', null, [
-          h('h1', null, `page ${p}`),
-          h('table', null, [
-            h('tr', null, [
-              h('th', null, 'rank'),
-              h('th', null, 'score'),
-              h('th', null, 'comments'),
-              h('th', null, 'title'),
-              h('th', { class: 'updated' }, 'updated')
-            ]),
-            data[p].map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
-              h('td', null, '#' + item.rank),
-              h('td', null, `${item.score}`),
-              h('td', null, `${item.commentCount}`),
-              h('td', null, h('a', { href: item.link, target: '_blank' }, item.title)),
-              h('td', null, item.updated)
-            ])
-            )
+      h('h1', null, [h('a', { href: '/' }, 'hacker news analytics')]),
+      h('div', null, [
+        h('table', null, [
+          h('tr', null, [
+            h('th', null, 'rank'),
+            h('th', null, 'score'),
+            h('th', null, 'comments'),
+            h('th', null, 'title'),
+            h('th', { class: 'updated' }, 'updated')
+          ]),
+          all.map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${item.id}`) } }, [
+            h('td', null, '#' + item.rank),
+            h('td', null, `${item.score}`),
+            h('td', null, `${item.commentCount}`),
+            h('td', null, h('a', { href: item.link, target: '_blank' }, item.title)),
+            h('td', null, item.updated)
           ])
+          )
         ])
-      })
-      // h('pre', null, safeJSONstringify(data))
+      ])
     ])
   }
 }
@@ -110,11 +111,5 @@ export default class App extends Component {
 function safeJSONparse (str, fallback = []) {
   try {
     return JSON.parse(str)
-  } catch (err) { return fallback }
-}
-
-function safeJSONstringify (str, fallback = '') {
-  try {
-    return JSON.stringify(str, null, 2)
   } catch (err) { return fallback }
 }
