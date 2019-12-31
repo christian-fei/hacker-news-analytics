@@ -61,8 +61,8 @@ export default class App extends Component {
         h('div', null, [
           h('h1', null, [h('a', { href: '/' }, 'hacker news analytics')]),
           ...chartSection,
-          h('h4', null, 'changes over time'),
           h('br', null, []),
+          h('h4', null, 'changes over time'),
           h('table', null, [
             h('tr', null, [
               h('th', null, 'rank'),
