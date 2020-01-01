@@ -9,10 +9,12 @@ module.exports = {
     max_memory_restart: '500M',
     env: {
       NODE_ENV: 'development',
+      PORT: 5000,
       MONGO_URI: 'mongodb://localhost:27017/hackernews'
     },
     env_production: {
       NODE_ENV: 'production',
+      PORT: 5000,
       MONGO_URI: 'mongodb://localhost:27017/hackernews'
     }
   }],
