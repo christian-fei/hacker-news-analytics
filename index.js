@@ -40,15 +40,6 @@ async function main () {
   })
   queue.process(4, processJob)
 
-  setInterval(async () => {
-    console.log('checking failed')
-    const failed = await queue.getFailed()
-    for (const job of failed) {
-      console.log('retrying', job.id)
-      await job.retry()
-    }
-  }, 10000)
-
   async function processJob (job, done) {
     console.log('processing', job.id, job.data)
     job.progress(10)
