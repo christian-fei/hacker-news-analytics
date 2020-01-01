@@ -77,7 +77,7 @@ export default class App extends Component {
                 if (!this.state.isStats) window.location.href = window.location.href.replace(/$/, `stats/${item.id}`)
               }
             }, [
-              h('td', null, '#' + item.rank),
+              h('td', null, `#${item.rank} ${(index < data.length - 1) ? `(${item.rank - (data[index + 1] && data[index + 1].rank)})` : ''}`),
               h('td', null, `${item.score} ${(index < data.length - 1) ? `(${item.score - (data[index + 1] && data[index + 1].score)})` : ''}`),
               h('td', null, `${item.commentCount} ${(index < data.length - 1) ? `(${item.commentCount - (data[index + 1] && data[index + 1].commentCount)})` : ''}`),
               h('td', null, h('a', { href: item.link, target: '_blank' }, item.title)),
