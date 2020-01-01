@@ -59,7 +59,12 @@ export default class App extends Component {
 
       return h('div', null, [
         h('div', null, [
-          h('h1', null, [h('a', { href: '/' }, 'hacker news analytics')]),
+          h('h1', null, [
+            h('a', { href: '/' }, 'hacker news analytics'),
+            h('span', null, ' - '),
+            h('a', { href: 'https://github.com/christian-fei/hackernews-analytics', target: '_blank' }, '⑂ fork on github')
+          ]),
+          h('p', null, 'changes of a single post over time.'),
           ...chartSection,
           h('br', null, []),
           h('h4', null, 'changes over time'),
@@ -89,7 +94,13 @@ export default class App extends Component {
     }
 
     return h('div', null, [
-      h('h1', null, [h('a', { href: '/' }, 'hacker news analytics')]),
+      h('h1', null, [
+        h('a', { href: '/' }, 'hacker news analytics'),
+        h('span', null, ' - '),
+        h('a', { href: 'https://github.com/christian-fei/hackernews-analytics', target: '_blank' }, '⑂ fork on github')
+      ]),
+      h('p', null, 'a small tool to monitor the performance of a hacker news post over time.'),
+      h('p', null, 'data collected: rank, score and comment count.'),
       h('div', null, [
         h('table', null, [
           h('tr', null, [
