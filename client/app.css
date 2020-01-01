@@ -21,3 +21,18 @@ table {
 th.updated {
   width: 275px;
 }
+
+tr:before {
+  display: inline-block;
+  line-height: 1;
+  height: 1em;
+  width: 1em;
+  content: '○';
+}
+tr:first-child:before {
+  content: '';
+}
+
+tr:hover:before {
+  content: '📊';
+}
