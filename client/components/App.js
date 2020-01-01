@@ -107,7 +107,7 @@ export default class App extends Component {
       h('h5', null, 'status log'),
       h('pre', null, log.join('\n')),
       h('div', null, [
-        h('table', null, [
+        h('table', { class: 'clickable' }, [
           h('tr', null, [
             h('th', null, 'rank'),
             h('th', null, 'score'),

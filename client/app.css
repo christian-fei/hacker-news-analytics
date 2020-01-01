@@ -22,17 +22,17 @@ th.updated {
   width: 275px;
 }
 
-tr:before {
+.clickable tr:before {
   display: inline-block;
   line-height: 1;
   height: 1em;
   width: 1em;
   content: '○';
 }
-tr:first-child:before {
+.clickable tr:first-child:before {
   content: '';
 }
 
-tr:hover:before {
+.clickable tr:hover:before {
   content: '📊';
 }
