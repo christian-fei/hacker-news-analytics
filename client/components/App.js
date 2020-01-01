@@ -109,7 +109,6 @@ export default class App extends Component {
       h('div', null, [
         h('table', null, [
           h('tr', null, [
-            // h('th', null, ''),
             h('th', null, 'rank'),
             h('th', null, 'score'),
             h('th', null, 'comments'),
@@ -117,7 +116,6 @@ export default class App extends Component {
             h('th', { class: 'updated' }, 'updated')
           ]),
           all.map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${encodeURIComponent(item.title)}`) } }, [
-            // h('td', null, [h('span', { class: 'stats-click' }, null)]),
             h('td', null, '#' + item.rank),
             h('td', null, `${item.score}`),
             h('td', null, `${item.commentCount}`),
