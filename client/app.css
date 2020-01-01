@@ -15,6 +15,7 @@ table pre {
 
 table {
   text-align: right;
+  min-width: 1000px;
 }
 
 th.updated {
