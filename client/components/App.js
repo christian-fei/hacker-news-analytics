@@ -6,6 +6,7 @@ export default class App extends Component {
     super()
     this.state = {
       data: {},
+      log: [],
       isStats: /\/stats/.test(window.location.pathname)
     }
     const eventSource = new window.EventSource('/sse' + window.location.pathname)
@@ -14,13 +15,15 @@ export default class App extends Component {
       if (!message || !message.data) return console.error('skipping empty message')
       message = safeJSONparse(message.data, {})
       const data = message.data || {}
+      const log = message.log || {}
       console.log('data', data)
-      this.setState({ data, isStats: /\/stats/.test(window.location.pathname) })
+      this.setState({ data, log, isStats: /\/stats/.test(window.location.pathname) })
     }
   }
 
   render () {
     const data = this.state.data
+    const log = this.state.log
     const all = Object.keys(data).reduce((acc, key) => acc.concat(data[key]), [])
 
     if (!data || Object.keys(data).length === 0) {
@@ -101,6 +104,8 @@ export default class App extends Component {
       ]),
       h('p', null, 'a small tool to monitor the performance of a hacker news post over time.'),
       h('p', null, 'data collected: rank, score and comment count.'),
+      h('h5', null, 'status log'),
+      h('pre', null, log.join('\n')),
       h('div', null, [
         h('table', null, [
           h('tr', null, [

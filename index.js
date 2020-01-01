@@ -96,8 +96,10 @@ async function main () {
 
     await job.progress(100)
 
-    server.update(data => {
+    server.update(({ data, log }) => {
       data[pageNumber] = items
+      if (log.length > 10) log.pop()
+      log.push(`scraped content on page ${pageNumber} @ ${new Date().toISOString()}`)
     })
 
     for (const item of items) {
@@ -129,6 +131,7 @@ async function main () {
 
 async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT || 4000 } = {}) {
   const data = {}
+  const log = []
   const app = connect()
   withRouter(app)
   const httpServer = http.createServer(app)
@@ -136,7 +139,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
 
   console.log(`listening on http://localhost:${port}`)
   return {
-    update: (cb = Function.prototype) => { cb(data) },
+    update: (cb = Function.prototype) => { cb({ data, log }) },
     address: async () => {
       const address = httpServer.address()
       if (address) return `http://localhost:${address.port}`
@@ -179,12 +182,12 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
           console.log('finding items', { title })
           const data = await itemsColl.find({ title }, { sort: { updated: -1 } })
           res.write('event: message\n')
-          res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
+          res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data, log })}\n`)
           return res.write('\n\n')
         }
 
         res.write('event: message\n')
-        res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data })}\n`)
+        res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data, log })}\n`)
         res.write('\n\n')
       }
 
