@@ -1,5 +1,5 @@
 {
-  "name": "hackernews-analytics",
+  "name": "hacker-news-analytics",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christian-fei/hackernews-analytics.git"
+    "url": "git+https://github.com/christian-fei/hacker-news-analytics.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/christian-fei/hackernews-analytics/issues"
+    "url": "https://github.com/christian-fei/hacker-news-analytics/issues"
   },
-  "homepage": "https://github.com/christian-fei/hackernews-analytics#readme",
+  "homepage": "https://github.com/christian-fei/hacker-news-analytics#readme",
   "dependencies": {
     "connect": "^3.7.0",
     "mega-scraper": "^11.11.0",

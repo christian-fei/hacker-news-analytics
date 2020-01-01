@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: 'hackernews-analytics',
+    name: 'hacker-news-analytics',
     script: 'npm',
     args: 'start',
     instances: 1,
@@ -24,9 +24,9 @@ module.exports = {
       user: 'root',
       host: 'cf',
       ref: 'origin/master',
-      repo: 'https://github.com/christian-fei/hackernews-analytics.git',
-      path: '/root/apps/hackernews-analytics',
-      'pre-deploy': 'mkdir -p /root/apps/hackernews-analytics',
+      repo: 'https://github.com/christian-fei/hacker-news-analytics.git',
+      path: '/root/apps/hacker-news-analytics',
+      'pre-deploy': 'mkdir -p /root/apps/hacker-news-analytics',
       'post-deploy': 'npm install && pm2 stop ecosystem.config.js && sleep 1 && pm2 startOrGracefulReload ecosystem.config.js --env production'
     }
   }
