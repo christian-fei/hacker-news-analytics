@@ -22,6 +22,10 @@ th.updated {
   width: 275px;
 }
 
+tr:first-child {
+  background: #fe1;
+}
+
 .clickable tr:before {
   display: inline-block;
   line-height: 1;
