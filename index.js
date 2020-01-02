@@ -33,7 +33,7 @@ async function main () {
   setInterval(async () => {
     console.log('running')
     await run()
-  }, 1000 * 60)
+  }, 1000 * 60 * 2)
   queue.on('stalled', async (job) => {
     console.log('discard stalled job', job.id, job.data)
     await job.discard()
