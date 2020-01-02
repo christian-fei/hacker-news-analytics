@@ -20,7 +20,7 @@ table {
 }
 
 th {
-  min-width: 90px;
+  min-width: 100px;
 }
 th.updated {
   width: 275px;
