@@ -16,10 +16,7 @@ table pre {
 table {
   text-align: right;
   min-width: 1000px;
-}
-
-th.updated {
-  width: 275px;
+  width: 100%;
 }
 
 tr:first-child {
@@ -32,6 +29,8 @@ tr:first-child {
   height: 1em;
   width: 1em;
   content: '○';
+  margin-top: 0.5em;
+  /* vertical-align: middle; */
 }
 .clickable tr:first-child:before {
   content: '';
@@ -39,4 +38,7 @@ tr:first-child {
 
 .clickable tr:hover:before {
   content: '📊';
+}
+.clickable tr:first-child:hover:before {
+  content: '';
 }

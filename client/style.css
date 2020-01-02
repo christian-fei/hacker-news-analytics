@@ -1,14 +1,14 @@
 /* layout */
 html, body { min-height: 100%; min-height: 100vh; }
 body { padding: 0.5em 1em; }
-body > header { max-width: 60em; margin: 0 auto; }
-body > main { max-width: 60em; margin: 0 auto; }
-body > footer { max-width: 60em; margin: 0 auto; }
+body > header { max-width: 65em; margin: 0 auto; }
+body > main { max-width: 65em; margin: 0 auto; }
+body > footer { max-width: 65em; margin: 0 auto; }
 img { max-width: 100%; }
 
 /* typography */
-html, body { font-size: 20px; font-weight: 400; line-height: 1; }
-@media all and (max-width: 60em) { html, body { font-size: 16px; } }
+html, body { font-size: 18px; font-weight: 400; line-height: 1; }
+@media all and (max-width: 65em) { html, body { font-size: 16px; } }
 html, body { font-family: 'Poppins', sans-serif; }
 a { color: inherit; }
 a:visited { color: inherit; }

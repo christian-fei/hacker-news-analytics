@@ -77,7 +77,7 @@ export default class App extends Component {
               h('th', null, 'score'),
               h('th', null, 'comments'),
               h('th', null, 'title'),
-              h('th', { class: 'updated' }, 'updated')
+              h('th', null, 'updated')
             ]),
             data.map((item, index) => h('tr', {
               id: item.id,
@@ -89,7 +89,7 @@ export default class App extends Component {
               h('td', null, `${item.score} ${(index < data.length - 1) ? `(${item.score - (data[index + 1] && data[index + 1].score)})` : ''}`),
               h('td', null, `${item.commentCount} ${(index < data.length - 1) ? `(${item.commentCount - (data[index + 1] && data[index + 1].commentCount)})` : ''}`),
               h('td', null, h('a', { href: item.link, target: '_blank' }, item.title)),
-              h('td', null, item.updated)
+              h('td', null, (item.updated || '').substring(11, 19))
             ]))
           ])
         ])
@@ -112,15 +112,15 @@ export default class App extends Component {
             h('th', null, 'rank'),
             h('th', null, 'score'),
             h('th', null, 'comments'),
-            h('th', null, 'title'),
-            h('th', { class: 'updated' }, 'updated')
+            h('th', null, 'title')
+            // h('th', null, 'updated')
           ]),
           all.map(item => h('tr', { id: item.id, onClick: (e) => { window.location.href = window.location.href.replace(/$/, `stats/${encodeURIComponent(item.title)}`) } }, [
             h('td', null, '#' + item.rank),
             h('td', null, `${item.score}`),
             h('td', null, `${item.commentCount}`),
-            h('td', null, h('a', { href: item.link, target: '_blank' }, item.title)),
-            h('td', null, item.updated)
+            h('td', null, h('a', { href: item.link, target: '_blank' }, item.title))
+            // h('td', null, (item.updated || '').substring(11, 19))
           ])
           )
         ])
