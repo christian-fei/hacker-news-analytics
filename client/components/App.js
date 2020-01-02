@@ -74,10 +74,10 @@ export default class App extends React.Component {
           <h4>changes over time</h4>
           <table>
             <tr>
-              <th>rank'</th>
-              <th>score'</th>
-              <th>comments'</th>
-              <th>title'</th>
+              <th>rank</th>
+              <th>score</th>
+              <th>comments</th>
+              <th>title</th>
               <th class='updated'>updated</th>
             </tr>
             {data.map((item, index) =>
