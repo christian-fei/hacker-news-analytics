@@ -35,42 +35,27 @@ export default class App extends React.Component {
       const chartSection = []
 
       if (enoughDataForCharts) {
-        const chartHeight = 100
-        const scores = data.map(d => d.score).reverse()
-        const maxScore = Math.max(...scores)
-        const minScore = Math.min(...scores)
-        const normalizedScores = scores.map(score => ((score - minScore) / (maxScore - minScore)) * chartHeight)
-        const comments = data.map(d => d.commentCount).reverse()
-        const maxComments = Math.max(...comments)
-        const minComments = Math.min(...comments)
-        const normalizedComments = comments.map(comment => ((comment - minComments) / (maxComments - minComments)) * chartHeight)
+        const scores = data.map(d => d.score)
+        const comments = data.map(d => d.commentCount)
         chartSection.push(...[
           <div>
-            <div style='display: inline-block;width: 50%;'>
+            <div class='half'>
               <h4>score over time</h4>
-              <br />
-              <svg width='300px' height={`${chartHeight}px`}>
-                {normalizedScores.map((n, i) =>
-                  <rect width={`${100 / normalizedScores.length}%`} x={0} y={chartHeight - n} height={n} transform={`translate(${300 / normalizedScores.length * i}, 0)`} />
-                )}
-              </svg>
-              <div style='display: inline-block;width: 50%;'>
-                <h4>comments over time</h4>
-                <br />
-                <svg width='600px' height={`${chartHeight}px`}>
-                  {normalizedComments.map((n, i) =>
-                    <rect width={`${100 / normalizedComments.length}%`} x={0} y={chartHeight - n} height={n} transform={`translate(${300 / normalizedComments.length * i}, 0)`} />
-                  )}
-                </svg>
-              </div>
-            </div>
-            <div>
               <Chart
-                chartType='ScatterChart'
-                data={[['Age', 'Weight'], [4, 5.5], [8, 12]]}
+                chartType='Line'
+                data={[['Date', 'Score'], ...scores.map((score, index) => [new Date(data[index].updated), score])]}
                 width='100%'
-                height='400px'
-                legendToggle />
+                height='200px'
+                options={{ legend: { position: 'none' } }} />
+            </div>
+            <div class='half'>
+              <h4>comments over time</h4>
+              <Chart
+                chartType='Line'
+                data={[['Date', 'Comments'], ...comments.map((comments, index) => [new Date(data[index].updated), comments])]}
+                width='100%'
+                height='200px'
+                options={{ legend: { position: 'none' } }} />
             </div>
           </div>
         ])
@@ -84,7 +69,7 @@ export default class App extends React.Component {
             <a href='https://github.com/christian-fei/hacker-news-analytics' target='_blank'>⑂ fork on github</a>
           </h1>
           <p>changes of a single post over time.</p>
-          {/* {...chartSection} */}
+          {chartSection}
           <br />
           <h4>changes over time</h4>
           <table>

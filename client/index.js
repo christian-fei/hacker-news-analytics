@@ -1,4 +1,5 @@
-import * as preact from 'preact'
+import * as React from 'react'
+import { render } from 'react-dom'
 import App from './components/App.js'
 
-preact.render(preact.h(App), document.getElementById('main'))
+render(<App />, document.getElementById('main'))
