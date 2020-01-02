@@ -192,7 +192,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       gp
       if (/\/stats/.test(req.url)) {
         res.setHeader('Content-Type', 'text/html')
-        res.write(index())
+        res.write(read(path.join(__dirname, 'client', 'index.html')) || index())
         return res.end()
       }
 
