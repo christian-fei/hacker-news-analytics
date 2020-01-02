@@ -62,8 +62,8 @@ async function main () {
       throw new Error('blocked')
     }
 
-    job.progress(80)
-    await job.progress(90)
+    await job.progress(80)
+
     const ids = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.getAttribute('id')))
     const titles = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.innerText))
     const links = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.href))
@@ -189,7 +189,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
 
     app.use((req, res) => {
       console.log('handle', req.url)
-
+      gp
       if (/\/stats/.test(req.url)) {
         res.setHeader('Content-Type', 'text/html')
         res.write(index())
