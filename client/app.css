@@ -19,6 +19,10 @@ table {
   width: 100%;
 }
 
+th.updated {
+  width: 275px;
+}
+
 tr:first-child {
   background: #fe1;
 }

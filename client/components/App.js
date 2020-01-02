@@ -77,7 +77,7 @@ export default class App extends Component {
               h('th', null, 'score'),
               h('th', null, 'comments'),
               h('th', null, 'title'),
-              h('th', null, 'updated')
+              h('th', { class: 'updated' }, 'updated')
             ]),
             data.map((item, index) => h('tr', {
               id: item.id,
