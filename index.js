@@ -99,7 +99,7 @@ async function main () {
     server.update(({ data, log }) => {
       data[pageNumber] = items
       if (log.length >= 10) log.splice(0, 1)
-      log.push(`scraped content on page ${pageNumber} @ ${new Date().toISOString()}`)
+      log.push(`scraped content on page ${pageNumber}\t @ ${new Date().toISOString()}`)
     })
 
     for (const item of items) {
