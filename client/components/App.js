@@ -66,10 +66,11 @@ export default class App extends React.Component {
           <h1>
             <a href='/'>hacker news analytics</a>
             <span>&nbsp; - &nbsp;</span>
-            <a href='https://twitter.com/christian_fei'>by @christian_fei</a>
-            <span>&nbsp; - &nbsp;</span>
             <a href='https://github.com/christian-fei/hacker-news-analytics' target='_blank'>⑂ fork on github</a>
           </h1>
+          <p>
+            <a style={{ fontWeight: 'bold' }} href='https://twitter.com/christian_fei'>by @christian_fei</a>
+          </p>
           <p>changes of a single post over time.</p>
           {chartSection}
           <br />
@@ -100,10 +101,11 @@ export default class App extends React.Component {
       <h1>
         <a href='/'>hacker news analytics</a>
         <span>&nbsp; - &nbsp;</span>
-        <a href='https://twitter.com/christian_fei'>by @christian_fei</a>
-        <span>&nbsp; - &nbsp;</span>
         <a href='https://github.com/christian-fei/hacker-news-analytics' target='_blank'>⑂ fork on github</a>
       </h1>
+      <p>
+        <a style={{ fontWeight: 'bold' }} href='https://twitter.com/christian_fei'>by @christian_fei</a>
+      </p>
       <p>a small tool to monitor the performance of a hacker news post over time.</p>
       <p>data collected: rank, score and comment count.</p>
       <h5>status log</h5>
