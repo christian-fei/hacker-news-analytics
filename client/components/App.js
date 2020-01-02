@@ -66,6 +66,8 @@ export default class App extends React.Component {
           <h1>
             <a href='/'>hacker news analytics</a>
             <span>&nbsp; - &nbsp;</span>
+            <a href='https://twitter.com/christian_fei'>by @christian_fei</a>
+            <span>&nbsp; - &nbsp;</span>
             <a href='https://github.com/christian-fei/hacker-news-analytics' target='_blank'>⑂ fork on github</a>
           </h1>
           <p>changes of a single post over time.</p>
@@ -97,6 +99,8 @@ export default class App extends React.Component {
     return <div>
       <h1>
         <a href='/'>hacker news analytics</a>
+        <span>&nbsp; - &nbsp;</span>
+        <a href='https://twitter.com/christian_fei'>by @christian_fei</a>
         <span>&nbsp; - &nbsp;</span>
         <a href='https://github.com/christian-fei/hacker-news-analytics' target='_blank'>⑂ fork on github</a>
       </h1>
