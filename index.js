@@ -189,10 +189,10 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
 
     app.use((req, res) => {
       console.log('handle', req.url)
-      gp
+
       if (/\/stats/.test(req.url)) {
         res.setHeader('Content-Type', 'text/html')
-        res.write(read(path.join(__dirname, 'client', 'index.html')) || index())
+        res.write(index())
         return res.end()
       }
 
