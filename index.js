@@ -49,7 +49,6 @@ async function main () {
     page = await preparePage(page, { proxy: true, blocker: true, images: true, stylesheets: true, javascript: true })
     job.progress(30)
 
-    // await page.goto(job.data.url, { timeout: 10000 })
     await page.waitForSelector('table')
     job.progress(50)
 
@@ -64,9 +63,7 @@ async function main () {
     }
 
     job.progress(80)
-    // await takeScreenshot(page, job.data)
     await job.progress(90)
-    // const titles = await page.$$eval('.storylink', el => el && el.innerText)
     const ids = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.getAttribute('id')))
     const titles = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.innerText))
     const links = await page.evaluate(() => [...document.querySelectorAll('.storylink')].map(el => el.href))
@@ -74,7 +71,6 @@ async function main () {
     const ages = await page.evaluate(() => [...document.querySelectorAll('.age a')].map(el => el.innerText))
     const ranks = await page.evaluate(() => [...document.querySelectorAll('.athing .rank')].map(el => +(el.innerText.replace(/\D/gi, ''))))
     const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr td > a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
-    // console.log({ titles, links, scores, ages, commentCounts })
     await page.close()
     console.log('success', job.id, job.data.url)
     const pageNumber = +job.data.url.replace(/\D/gi, '')
@@ -90,7 +86,6 @@ async function main () {
       updated: new Date().toISOString()
     }))
 
-    // console.log(JSON.stringify(items))
     await fsp.mkdir(path.resolve(__dirname, 'data'), { recursive: true })
     await fsp.mkdir(path.resolve(__dirname, 'data', job.data.url, '..'), { recursive: true })
     await fsp.writeFile(path.resolve(__dirname, 'data', `${job.data.url}.json`), JSON.stringify(items, null, 2))
@@ -171,9 +166,6 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       async function writeSSE () {
         if (/\/stats\//gi.test(req.url)) {
           res.write('event: message\n')
-          // const id = req.url.replace(/\/stats\//gi, '')
-          // console.log('finding items', { id })
-          // const data = await itemsColl.find({ id }, { sort: { updated: -1 } })
           let title = req.url.replace(/\/stats\//gi, '')
           title = decodeURIComponent(title)
           console.log('finding items', { title })
@@ -207,11 +199,9 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       }
 
       if (req.url !== '/') {
-        // console.log('unhandled', req.url)
         filename = req.url.replace(/^\//, '')
         contentType = filename.includes('css') ? 'text/css' : 'text/javascript'
       }
-      // console.log('guessed', filename, contentType, 'for', req.url)
       res.setHeader('Content-Type', contentType)
       res.write(read(path.join(__dirname, 'client', filename)) || index())
       return res.end()
