@@ -22,6 +22,7 @@
   "dependencies": {
     "connect": "^3.7.0",
     "mega-scraper": "^11.11.0",
-    "monk": "^7.1.1"
+    "monk": "^7.1.1",
+    "pino": "^5.15.0"
   }
 }

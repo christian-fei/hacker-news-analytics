@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { browser: { createBrowser, preparePage }, queue: { createQueue } } = require('mega-scraper')
+const logger = require('pino')()
 const path = require('path')
 const monk = require('monk')
 const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
@@ -17,7 +18,7 @@ async function main () {
   const queue = createQueue('hackernews')
   const server = await createServer({ port: +process.env.PORT || +process.env.HTTP_PORT || 5000 })
 
-  console.log('creating index')
+  logger.info('creating index')
   await itemsColl.createIndex({
     id: 1,
     title: 1,
@@ -31,17 +32,17 @@ async function main () {
 
   await run()
   setInterval(async () => {
-    console.log('running')
+    logger.info('running')
     await run()
   }, 1000 * 60 * 2)
   queue.on('stalled', async (job) => {
-    console.log('discard stalled job', job.id, job.data)
+    logger.info('discard stalled job', job.id, job.data)
     await job.discard()
   })
   queue.process(4, processJob)
 
   async function processJob (job, done) {
-    console.log('processing', job.id, job.data)
+    logger.info('processing', job.id, job.data)
     job.progress(10)
     let page = await browser.newPage(job.data.url, { reusePage: false })
     await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -72,8 +73,9 @@ async function main () {
     const ranks = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => +el.querySelector('.rank').innerText.replace(/\D/gi, '')))
     const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr td > a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
     await page.close()
-    console.log('success', job.id, job.data.url)
+    logger.info('success', job.id, job.data.url)
     const pageNumber = +job.data.url.replace(/\D/gi, '')
+    logger.info('pageNunber', pageNumber)
     const items = titles.map((_, i) => ({
       id: ids[i],
       title: titles[i],
@@ -100,8 +102,8 @@ async function main () {
 
     for (const item of items) {
       await itemsColl.insert(item)
-        .then(() => console.log('inserted', item.title, item.url))
-        .catch((err) => console.log('unchanged', item.title, item.url, err.message))
+        .then(() => logger.info('inserted', item.title, item.url))
+        .catch((err) => logger.info('unchanged', item.title, item.url, err.message))
     }
 
     done(null, items)
@@ -129,7 +131,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
   const httpServer = http.createServer(app)
   httpServer.listen(port)
 
-  console.log(`listening on http://localhost:${port}`)
+  logger.info(`listening on http://localhost:${port}`)
   return {
     update: (cb = Function.prototype) => { cb({ data, log }) },
     address: async () => {
@@ -147,13 +149,13 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
   }
 
   function withRouter (app) {
-    console.log('with router')
+    logger.info('with router')
     app.use('/favicon.ico', (req, res) => {
       return res.end()
     })
 
     app.use('/sse', (req, res) => {
-      console.log('sse', req.url)
+      logger.info('sse', req.url)
       res.writeHead(200, {
         Connection: 'keep-alive',
         'Content-Type': 'text/event-stream',
@@ -166,7 +168,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       return res.on('close', () => {
         clearInterval(handle)
         try { res.end() } catch (_) {}
-        console.log('sse connection closed')
+        logger.info('sse connection closed')
       })
 
       async function writeSSE () {
@@ -174,7 +176,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
           res.write('event: message\n')
           let title = req.url.replace(/\/stats\//gi, '')
           title = decodeURIComponent(title)
-          console.log('finding items', { title })
+          logger.info('finding items', { title })
           const data = await itemsColl.find({ title }, { sort: { updated: -1 } })
           res.write('event: message\n')
           res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data, log })}\n`)
@@ -188,7 +190,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
     })
 
     app.use((req, res) => {
-      console.log('handle', req.url)
+      logger.info('handle', req.url)
 
       if (/\/stats/.test(req.url)) {
         res.setHeader('Content-Type', 'text/html')
