@@ -111,15 +111,15 @@ async function main () {
 
   async function run () {
     await queue.add({ url: 'https://news.ycombinator.com/news?p=1' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=2' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=3' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=4' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=5' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=6' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=7' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=8' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=9' }, { attempts: 3 })
-    // await queue.add({ url: 'https://news.ycombinator.com/news?p=10' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=2' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=3' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=4' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=5' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=6' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=7' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=8' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=9' }, { attempts: 3 })
+    await queue.add({ url: 'https://news.ycombinator.com/news?p=10' }, { attempts: 3 })
   }
 }
 
