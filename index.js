@@ -68,7 +68,7 @@ async function main () {
     const ids = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.getAttribute('id')))
     const titles = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.querySelector('.storylink').innerText))
     const links = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.querySelector('.storylink').getAttribute('href')))
-    const scores = await page.evaluate(() => [...document.querySelectorAll('.athing + tr')].map(el => +el.querySelector('.score').innerText.replace(/\D/gi, '')))
+    const scores = await page.evaluate(() => [...document.querySelectorAll('.athing + tr')].map(el => +(el.querySelector('.score') || { innerText: '' }).innerText.replace(/\D/gi, '')))
     const ages = await page.evaluate(() => [...document.querySelectorAll('.athing + tr')].map(el => el.querySelector('.age a').innerText))
     const ranks = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => +el.querySelector('.rank').innerText.replace(/\D/gi, '')))
     const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr td > a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
@@ -111,15 +111,15 @@ async function main () {
 
   async function run () {
     await queue.add({ url: 'https://news.ycombinator.com/news?p=1' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=2' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=3' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=4' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=5' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=6' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=7' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=8' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=9' }, { attempts: 3 })
-    await queue.add({ url: 'https://news.ycombinator.com/news?p=10' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=2' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=3' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=4' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=5' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=6' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=7' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=8' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=9' }, { attempts: 3 })
+    // await queue.add({ url: 'https://news.ycombinator.com/news?p=10' }, { attempts: 3 })
   }
 }
 
