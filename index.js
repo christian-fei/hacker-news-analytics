@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { browser: { createBrowser, preparePage, takeScreenshot }, queue: { createQueue } } = require('mega-scraper')
+const { browser: { createBrowser, preparePage }, queue: { createQueue } } = require('mega-scraper')
 const path = require('path')
 const monk = require('monk')
 const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
@@ -169,7 +169,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       })
 
       writeSSE()
-      const handle = setInterval(writeSSE, 5000)
+      const handle = setInterval(writeSSE, 2000)
 
       async function writeSSE () {
         if (/\/stats\//gi.test(req.url)) {
