@@ -19,6 +19,9 @@ table {
   width: 100%;
 }
 
+th {
+  width: 90px;
+}
 th.updated {
   width: 275px;
 }
