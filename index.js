@@ -89,6 +89,7 @@ async function main () {
       commentCount: commentCounts[i],
       updated: new Date().toISOString()
     }))
+
     // console.log(JSON.stringify(items))
     await fsp.mkdir(path.resolve(__dirname, 'data'), { recursive: true })
     await fsp.mkdir(path.resolve(__dirname, 'data', job.data.url, '..'), { recursive: true })
@@ -104,14 +105,10 @@ async function main () {
 
     for (const item of items) {
       await itemsColl.insert(item)
-        .then(() => {
-          console.log('inserted', item.title, item.url)
-        })
-        .catch((err) => {
-          if (err) { console.error(err.message) }
-          console.log('unchanged', item.title, item.url)
-        })
+        .then(() => console.log('inserted', item.title, item.url))
+        .catch((err) => console.log('unchanged', item.title, item.url, err.message))
     }
+
     done(null, items)
   }
 
