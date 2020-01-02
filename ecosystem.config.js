@@ -27,7 +27,13 @@ module.exports = {
       repo: 'https://github.com/christian-fei/hacker-news-analytics.git',
       path: '/root/apps/hacker-news-analytics',
       'pre-deploy': 'mkdir -p /root/apps/hacker-news-analytics',
-      'post-deploy': 'npm install && pm2 stop ecosystem.config.js && sleep 1 && pm2 startOrGracefulReload ecosystem.config.js --env production'
+      'post-deploy': [
+        'npm install',
+        '(cd client && npm install && npm run build)',
+        'pm2 stop ecosystem.config.js',
+        'sleep 1',
+        'pm2 startOrGracefulReload ecosystem.config.js --env production'
+      ].join(' && ')
     }
   }
 }
