@@ -1,4 +1,4 @@
-import * as preact from '/preact.js'
+import * as preact from 'preact'
 const { Component, h } = preact
 
 export default class App extends Component {

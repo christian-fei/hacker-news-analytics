@@ -203,7 +203,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         contentType = filename.includes('css') ? 'text/css' : 'text/javascript'
       }
       res.setHeader('Content-Type', contentType)
-      res.write(read(path.join(__dirname, 'client', filename)) || index())
+      res.write(read(path.join(__dirname, 'client', 'dist', filename)) || index())
       return res.end()
     })
   }
@@ -218,6 +218,6 @@ function read (filepath, defaultValue = '') {
 }
 
 function index () {
-  const filepath = path.join(__dirname, 'client', 'index.html')
+  const filepath = path.join(__dirname, 'client', 'dist', 'index.html')
   return read(filepath)
 }

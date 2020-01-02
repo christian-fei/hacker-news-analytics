@@ -6,12 +6,16 @@
   "bin": "index.js",
   "scripts": {
     "test": "exit 0",
-    "build": "npx @pika/web"
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "preact": "^8.5.2"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.10"
   }
 }
