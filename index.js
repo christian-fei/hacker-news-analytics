@@ -163,6 +163,12 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       writeSSE()
       const handle = setInterval(writeSSE, 2000)
 
+      return res.on('close', () => {
+        clearInterval(handle)
+        try { res.end() } catch (_) {}
+        console.log('sse connection closed')
+      })
+
       async function writeSSE () {
         if (/\/stats\//gi.test(req.url)) {
           res.write('event: message\n')
@@ -179,12 +185,6 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
         res.write(`data: ${JSON.stringify({ time: new Date().toISOString(), data, log })}\n`)
         res.write('\n\n')
       }
-
-      return res.on('close', () => {
-        clearInterval(handle)
-        try { res.end() } catch (_) {}
-        console.log('sse connection closed')
-      })
     })
 
     app.use((req, res) => {
