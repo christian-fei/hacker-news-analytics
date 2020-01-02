@@ -188,16 +188,16 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
     })
 
     app.use((req, res) => {
-      console.log('middleware', req.url)
-      let filename = 'index.html'
-      let contentType = 'text/html'
+      console.log('handle', req.url)
 
       if (/\/stats/.test(req.url)) {
-        res.setHeader('Content-Type', contentType)
-        res.write(read(path.join(__dirname, 'client', filename)) || index())
+        res.setHeader('Content-Type', 'text/html')
+        res.write(index())
         return res.end()
       }
 
+      let filename = 'index.html'
+      let contentType = 'text/html'
       if (req.url !== '/') {
         filename = req.url.replace(/^\//, '')
         contentType = filename.includes('css') ? 'text/css' : 'text/javascript'
