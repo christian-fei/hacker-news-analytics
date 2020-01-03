@@ -15,7 +15,7 @@ export default class App extends React.Component {
       if (!message || !message.data) return console.error('skipping empty message')
       message = safeJSONparse(message.data, {})
       const data = message.data || {}
-      const log = message.log || {}
+      const log = message.log || []
       console.log('data', data)
       this.setState({ data, log, isStats: /\/stats/.test(window.location.pathname) })
     }
