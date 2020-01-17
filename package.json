@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/christian-fei/hacker-news-analytics#readme",
   "dependencies": {
+    "compromise": "^12.3.0",
+    "compromise-numbers": "0.0.4",
     "connect": "^3.7.0",
     "mega-scraper": "^11.11.0",
     "monk": "^7.1.1",
