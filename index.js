@@ -3,12 +3,11 @@
 const { browser: { createBrowser, preparePage }, queue: { createQueue } } = require('mega-scraper')
 const logger = require('pino')()
 const path = require('path')
-const monk = require('monk')
-const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
-const itemsColl = db.get('items')
+const db = require('./lib/db')
 const fsp = require('fs').promises
 const createServer = require('./lib/create-server')
 const extractInfoFromPage = require('./lib/extract-info-from-page')
+const createItemsCollectionIndexes = require('./lib/create-items-collection-indexes')
 
 main()
 
@@ -18,16 +17,7 @@ async function main () {
   const server = await createServer({ port: +process.env.PORT || +process.env.HTTP_PORT || 5000 })
 
   logger.info('creating index')
-  await itemsColl.createIndex({
-    id: 1,
-    title: 1,
-    page: 1,
-    rank: 1,
-    link: 1,
-    score: 1,
-    age: 1,
-    commentCount: 1
-  }, { unique: true })
+  await createItemsCollectionIndexes()
 
   await run()
   setInterval(async () => {
@@ -96,7 +86,7 @@ async function main () {
     })
 
     for (const item of items) {
-      await itemsColl.insert(item)
+      await db.get('items').insert(item)
         .then(() => logger.info('inserted', item.title, item.url))
         .catch((err) => logger.info('unchanged', item.title, item.url, err.message))
     }
