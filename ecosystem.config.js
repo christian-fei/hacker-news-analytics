@@ -10,11 +10,13 @@ module.exports = {
     env: {
       NODE_ENV: 'development',
       PORT: 5000,
+      LEVEL: 'debug',
       MONGO_URI: 'mongodb://localhost:27017/hackernews'
     },
     env_production: {
       NODE_ENV: 'production',
       PORT: 80,
+      LEVEL: 'debug',
       MONGO_URI: 'mongodb://localhost:27017/hackernews'
     }
   }],
