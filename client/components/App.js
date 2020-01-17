@@ -4,24 +4,50 @@ import { Chart } from 'react-google-charts'
 export default class App extends React.Component {
   constructor () {
     super()
+
+    const isMain = /^\/$/.test(window.location.pathname)
+    const isStats = /\/stats/.test(window.location.pathname)
+    const isNLP = /\/nlp/.test(window.location.pathname)
+
     this.state = {
       data: {},
       log: [],
-      isStats: /\/stats/.test(window.location.pathname)
+      isMain,
+      isStats,
+      isNLP
     }
-    const eventSource = new window.EventSource('/sse' + window.location.pathname)
 
-    eventSource.onmessage = (message) => {
-      if (!message || !message.data) return console.error('skipping empty message')
-      message = safeJSONparse(message.data, {})
-      const data = message.data || {}
-      const log = message.log || []
-      console.log('data', data)
-      this.setState({ data, log, isStats: /\/stats/.test(window.location.pathname) })
+    if (this.state.isMain || this.state.isStats) {
+      const eventSource = new window.EventSource('/sse' + window.location.pathname)
+
+      eventSource.onmessage = (message) => {
+        if (!message || !message.data) return console.error('skipping empty message')
+        message = safeJSONparse(message.data, {})
+        const data = message.data || {}
+        const log = message.log || []
+        console.log('data', data)
+        this.setState({ data, log, isStats: /\/stats/.test(window.location.pathname) })
+      }
     }
+    window.fetch('/nlp')
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 
   render () {
+    console.log(this.state)
+    if (this.state.isNLP) {
+      return <div>
+        nlp
+        {JSON.stringify(this.data)}
+      </div>
+    }
+
     const data = this.state.data
     const log = this.state.log
     const all = Object.keys(data).reduce((acc, key) => acc.concat(data[key]), [])

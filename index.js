@@ -185,6 +185,19 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
       }
     })
 
+    app.use('/nlp', (req, res) => {
+      const accept = req.headers.accept || ''
+      if (accept.indexOf('application/json') > 0 || accept.indexOf('*/*')) {
+        res.setHeader('Content-Type', 'application/json')
+        const nlpData = JSON.stringify({ foo: new Date().toISOString() })
+        res.write(nlpData)
+        return res.end()
+      }
+
+      res.setHeader('Content-Type', 'text/html')
+      res.write(index())
+      return res.end()
+    })
     app.use((req, res) => {
       logger.info('handle', req.url)
 
