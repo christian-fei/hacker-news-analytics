@@ -56,6 +56,8 @@ async function main () {
 
     await page.close()
 
+    await job.progress(90)
+
     logger.info('success', job.id, job.data.url)
     const pageNumber = +job.data.url.replace(/\D/gi, '')
     logger.info('pageNunber', pageNumber)
