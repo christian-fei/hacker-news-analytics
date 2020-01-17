@@ -28,6 +28,7 @@ export default class App extends React.Component {
         console.log('data', data)
         this.setState({ data, log, isStats: /\/stats/.test(window.location.pathname) })
       }
+      return
     }
     window.fetch('/nlp')
       .then(res => res.json())
