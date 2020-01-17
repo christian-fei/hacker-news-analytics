@@ -20,12 +20,10 @@ async function main () {
   await createItemsCollectionIndexes()
 
   await run()
-  setInterval(async () => {
-    logger.info('running')
-    await run()
-  }, 1000 * 60 * 2)
+  setInterval(run, 1000 * 60 * 2)
+
   queue.on('stalled', async (job) => {
-    logger.info('discard stalled job', job.id, job.data)
+    logger.info('discarding stalled job', job.id, job.data)
     await job.discard()
   })
   queue.process(4, processJob)
@@ -95,6 +93,8 @@ async function main () {
   }
 
   async function run () {
+    logger.info('running')
+
     await queue.add({ url: 'https://news.ycombinator.com/news?p=1' }, { attempts: 3 })
     await queue.add({ url: 'https://news.ycombinator.com/news?p=2' }, { attempts: 3 })
     await queue.add({ url: 'https://news.ycombinator.com/news?p=3' }, { attempts: 3 })
