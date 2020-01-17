@@ -7,6 +7,16 @@ live: https://hacker-news-analytics.christianfei.com/
 ![preview-single](/preview-single.png)
 ![preview](/preview.png)
 
+## playground
+
+```
+npm run play
+
+# or
+
+MONGO_URI=mongodb://localhost:27017/hackernews node playground.js
+```
+
 ## tests
 
 ## fixtures

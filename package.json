@@ -6,6 +6,7 @@
   "scripts": {
     "start": "./index.js",
     "deploy": "pm2 deploy production",
+    "play": "MONGO_URI=mongodb://localhost:27017/hackernews node playground.js",
     "test": "MONGO_URI=mongodb://localhost:27017/hackernews-test ava -s -v test/*.test.js"
   },
   "repository": {
