@@ -129,7 +129,7 @@ async function createServer ({ port = process.env.PORT || process.env.HTTP_PORT 
 
   logger.info(`listening on http://localhost:${port}`)
   return {
-    update: (cb = Function.prototype) => { cb({ data, log }) },
+    update: (update = Function.prototype) => { update({ data, log }) },
     address: async () => {
       const address = httpServer.address()
       if (address) return `http://localhost:${address.port}`
