@@ -8,6 +8,7 @@ const db = monk(process.env.MONGO_URI || 'mongodb://localhost:27017/hackernews')
 const itemsColl = db.get('items')
 const fsp = require('fs').promises
 const createServer = require('./lib/create-server')
+const extractInfoFromPage = require('./lib/extract-info-from-page')
 
 main()
 
@@ -63,7 +64,7 @@ async function main () {
 
     await job.progress(80)
 
-    const { ids, titles, links, scores, ages, ranks, commentCounts } = await extract(page)
+    const { ids, titles, links, scores, ages, ranks, commentCounts } = await extractInfoFromPage(page)
 
     await page.close()
 
@@ -114,25 +115,5 @@ async function main () {
     await queue.add({ url: 'https://news.ycombinator.com/news?p=8' }, { attempts: 3 })
     await queue.add({ url: 'https://news.ycombinator.com/news?p=9' }, { attempts: 3 })
     await queue.add({ url: 'https://news.ycombinator.com/news?p=10' }, { attempts: 3 })
-  }
-}
-
-async function extract (page) {
-  const ids = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.getAttribute('id')))
-  const titles = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.querySelector('.storylink').innerText))
-  const links = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => el.querySelector('.storylink').getAttribute('href')))
-  const scores = await page.evaluate(() => [...document.querySelectorAll('.athing + tr')].map(el => +(el.querySelector('.score') || { innerText: '' }).innerText.replace(/\D/gi, '')))
-  const ages = await page.evaluate(() => [...document.querySelectorAll('.athing + tr')].map(el => el.querySelector('.age a').innerText))
-  const ranks = await page.evaluate(() => [...document.querySelectorAll('.athing')].map(el => +el.querySelector('.rank').innerText.replace(/\D/gi, '')))
-  const commentCounts = await page.evaluate(() => [...document.querySelectorAll('.athing + tr td > a:last-child')].map(el => +(el.innerText.replace(/\D/gi, ''))))
-
-  return {
-    ids,
-    titles,
-    links,
-    scores,
-    ages,
-    ranks,
-    commentCounts
   }
 }
