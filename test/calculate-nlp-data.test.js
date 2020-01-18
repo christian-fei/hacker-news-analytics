@@ -1,5 +1,5 @@
 const test = require('ava')
-const db = require('../lib/db')
+// const db = require('../lib/db')
 // const items50000 = require('./fixtures/items.50000.json')
 const distinctTitles = require('./fixtures/distinct-titles.json')
 const calculateNlpData = require('../lib/calculate-nlp-data')
